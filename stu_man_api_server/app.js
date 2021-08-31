@@ -1,5 +1,4 @@
 const express = require('express')
-const usersRouter = require('./routes/users')
 const accountsRouter = require('./routes/accounts')
 
 const app = express()
@@ -23,21 +22,21 @@ app.use(express.json())
 // 解析表单请求体: application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
 
-// 挂载路由，并且给路由限定了访问前缀
-app.use('/users', usersRouter)
-app.use('/accounts', accountsRouter)
+// 挂载路由
+app.use(accountsRouter)
 
 // // 通常在所有的路由之后配置处理404内容
 // app.use((req,res,next) => {
 //   res.status(404).send('404 Not Found.')
 // })
 //
-// // 在所有中间件之后挂载错误处理中间件
-// app.use((err, req, res, next) => {
-//   console.log('错误', err)
-// })
 
-// 服务器监听5000端口
+// 在所有中间件之后挂载错误处理中间件
+app.use((err, req, res, next) => {
+  console.log('错误', err)
+})
+
+// 服务端监听5000端口
 app.listen(5000, () => {
   console.log(`Server running at http://localhost:5000/`)
 })

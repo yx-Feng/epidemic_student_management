@@ -3,8 +3,17 @@ const userList = require('../dao/accounts_dao')
 
 const router = express.Router()
 
+// 响应登录请求
+router.post('/login', function (req, res, next) {
+  try {
+    userList.login(req,res)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // 获取账号列表
-router.get('/', function (req, res, next) {
+router.get('/accounts', function (req, res, next) {
   try {
     userList.getAccounts(req,res)
   } catch (err) {
@@ -13,7 +22,7 @@ router.get('/', function (req, res, next) {
 })
 
 // 获取单个账号信息
-router.get('/:id', function (req, res, next) {
+router.get('/accounts/:id', function (req, res, next) {
   try {
     userList.getAccount(req,res)
   } catch (err) {
@@ -21,7 +30,8 @@ router.get('/:id', function (req, res, next) {
   }
 })
 
-router.post('/', function (req, res, next) {
+// 添加一个账号
+router.post('/accounts/', function (req, res, next) {
   try {
     userList.addAccount(req,res)
   } catch (err) {
@@ -29,7 +39,8 @@ router.post('/', function (req, res, next) {
   }
 })
 
-router.put('/:id', function (req, res, next) {
+// 根据id更新账号信息
+router.put('/accounts/:id', function (req, res, next) {
   try {
     userList.updateAccount(req,res)
   } catch (err) {
@@ -37,7 +48,8 @@ router.put('/:id', function (req, res, next) {
   }
 })
 
-router.delete('/:id', function (req, res, next) {
+// 根据id删除指定账号
+router.delete('/accounts/:id', function (req, res, next) {
   try {
     userList.deleteAccount(req,res)
   } catch (err) {

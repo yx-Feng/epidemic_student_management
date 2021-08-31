@@ -27,7 +27,7 @@ module.exports = class Model {
               resolve(results)
             }
             // 结束会话，释放链接
-            // connection.release()
+            connection.release()
           })
         }
       })
