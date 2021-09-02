@@ -17,9 +17,9 @@ module.exports = class accounts_dao extends require('../model/accounts_mod'){
   // 用户账号列表数据处理
   static async getAccounts(req,res){
     // 获取请求url中的Params,也就是我们查询的依据
-    let index = req.param('query')
-    let pageNum = Number(req.param('pagenum'))
-    let pageSize = Number(req.param('pagesize'))
+    let index = req.query.query
+    let pageNum = Number(req.query.pagenum)
+    let pageSize = Number(req.query.pagesize)
     let accountList = await this.getAccountList(index)
     // total记录获取到的数据总数
     let total = accountList.length

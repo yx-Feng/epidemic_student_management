@@ -1,5 +1,6 @@
 const express = require('express')
 const accountsRouter = require('./routes/accounts')
+const profileRouter = require('./routes/profile')
 
 const app = express()
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }))
 
 // 挂载路由
 app.use(accountsRouter)
+app.use('/profile', profileRouter)
 
 // // 通常在所有的路由之后配置处理404内容
 // app.use((req,res,next) => {

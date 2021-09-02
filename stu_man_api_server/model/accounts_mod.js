@@ -2,10 +2,9 @@
 module.exports = class accounts_mod extends require('./model'){
 
   // 用户登录
-  static loginUser(username,password,type){
-    type = Number(type)
+  static loginUser(username,password,identity){
     return new Promise(((resolve, reject) => {
-      let sql = "select * from" + " user where binary id='"+username+"' and password='"+password+"' and identity="+type
+      let sql = "select * from"+" user where binary id='"+username+"' and password='"+password+"' and identity='"+identity+"'"
       console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
@@ -21,7 +20,7 @@ module.exports = class accounts_mod extends require('./model'){
       // 如果url中有Params，根据index模糊查询, 否则默认全部查询
       let sql
       if (index) {
-        sql = "select * from" + " user where id like '%" + index + "%'"
+        sql = "select * from"+" user where id like '%"+index+"%'"
       } else {
         sql = "select * from" + " user"
       }
@@ -37,10 +36,18 @@ module.exports = class accounts_mod extends require('./model'){
   // 添加一个账号
   static createAccount(id,password,identity){
     return new Promise(((resolve, reject) => {
-      let sql = "insert into " + "user(id,password,identity) values('" + id + "','" + password + "','" + identity+ "')"
+      let sql = "insert into" + " user(id,password,identity) values('" + id + "','" + password + "','" + identity+ "')"
       console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
+        // 除了user表，student或counselor表也要初始化
+        if (identity === '1'){
+          sql = "insert into" + " student(id,name,sex,class,college,tel) values('" + id +"','空','空','空','空','空')"
+        } else {
+          sql = "insert into" + " student(id,name,sex,college,tel) values('" + id +"','空','空','空','空')"
+        }
+        console.log(sql)
+        this.query(sql)
       }).catch(err => {
         reject(err)
       })
