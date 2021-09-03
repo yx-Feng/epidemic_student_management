@@ -88,6 +88,7 @@ export default {
     return {
       // 获取用户列表的参数对象(查询的依据)
       queryInfo: {
+        // 搜索框输入的内容
         query: '',
         // 每页的数据条数(默认每页显示3条)
         pagesize: 3,

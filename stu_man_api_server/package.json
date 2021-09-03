@@ -13,7 +13,8 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.12",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "silly-datetime": "^0.1.2"
   },
   "main": "app.js",
   "devDependencies": {},
