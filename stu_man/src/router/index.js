@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/Login.vue'
+import Login from '../components/accounts/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Notice from '../components/Notice.vue'
-import TemForm from '../components/TemForm.vue'
-import LeaveForm from '../components/LeaveForm.vue'
-import StuProfile from '../components/StuProfile.vue'
-import CounProfile from '../components/CounProfile.vue'
-import Account from '../components/Account.vue'
+import TemForm from '../components/temForm/TemForm.vue'
+import LeaveForm from '../components/leaveForm/LeaveForm.vue'
+import StuProfile from '../components/profile/StuProfile.vue'
+import CounProfile from '../components/profile/CounProfile.vue'
+import Account from '../components/accounts/Account.vue'
+import PendingLeaveForm from '../components/leaveForm/PendingLeaveForm'
+import FailedLeaveForm from '../components/leaveForm/FailedLeaveForm'
+import PassedLeaveForm from '../components/leaveForm/PassedLeaveForm'
 
 Vue.use(VueRouter)
 
@@ -25,6 +28,9 @@ const router = new VueRouter({
         { path: '/notice', component: Notice },
         { path: '/temForm', component: TemForm },
         { path: '/leaveForm', component: LeaveForm },
+        { path: '/pendingLeaveForm', component: PendingLeaveForm },
+        { path: '/failedLeaveForm', component: FailedLeaveForm },
+        { path: '/passedLeaveForm', component: PassedLeaveForm },
         { path: '/stuProfile', component: StuProfile },
         { path: '/counProfile', component: CounProfile },
         { path: '/accounts', component: Account }

@@ -3,7 +3,7 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>请假管理</el-breadcrumb-item>
+      <el-breadcrumb-item>假条管理</el-breadcrumb-item>
       <el-breadcrumb-item>写假条</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区域 -->
@@ -171,7 +171,7 @@ export default {
       if (res[res.length - 1].status === '404') {
         return this.$message.success('获取到0张假条！')
       }
-      // 这里的total始终是所有能获取到的账号数量
+      // 这里的total始终是所有能获取到的假条数量
       this.total = res[res.length - 1].length
       res.pop()
       this.leaveList = res

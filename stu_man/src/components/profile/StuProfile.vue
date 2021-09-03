@@ -14,11 +14,11 @@
       </div>
       <el-row>
         <el-col :span="12">
-          <img src="../assets/mao.jpeg">
+          <img src="../../assets/longmao.jpeg">
         </el-col>
         <el-col :span="12">
           <div v-for="(item,i) in labelList" :key="i">
-            <div style="font-size: 18px;margin-top: 20px" class="text item">{{item}}: {{personInfo[propList[i]]}}</div>
+            <div style="font-size: 18px;margin-bottom: 20px">{{item}}: {{personInfo[propList[i]]}}</div>
           </div>
         </el-col>
       </el-row>
@@ -28,8 +28,8 @@
       <el-form v-for="(item,i) in labelList" :key="i" :model="personInfo"
                :rules="modifyFormRules" ref="modifyFormRef" label-width="80px">
         <el-form-item :label="item" :prop="propList[i]">
-          <!-- 工号和身份不可修改 -->
-          <el-input v-if="item === '工号' || item === '身份' || item === '姓名'" v-model="personInfo[propList[i]]" disabled></el-input>
+          <!-- 学号和身份不可修改 -->
+          <el-input v-if="item === '学号' || item === '身份' || item === '姓名'" v-model="personInfo[propList[i]]" disabled></el-input>
           <el-input v-else v-model="personInfo[propList[i]]"></el-input>
         </el-form-item>
       </el-form>
@@ -50,12 +50,12 @@ export default {
       // 当前用户的身份
       identity: '',
       // 存放个人资料
-      personInfo: { id: '', name: '', sex: '', identity: '', college: '', tel: '', password: '' },
+      personInfo: { id: '', name: '', sex: '', identity: '', class: '', college: '', tel: '', password: '' },
       // 控制修改个人资料对话框是否可见
       modifyDialogVisible: false,
       // 个人资料中的关键字
-      labelList: ['工号', '姓名', '性别', '身份', '学院', '联系方式', '账号密码'],
-      propList: ['id', 'name', 'sex', 'identity', 'college', 'tel', 'password'],
+      labelList: ['学号', '姓名', '性别', '身份', '班级', '学院', '联系方式', '账号密码'],
+      propList: ['id', 'name', 'sex', 'identity', 'class', 'college', 'tel', 'password'],
       // identity和身份的映射
       identity_reflect: { 0: '管理员', 1: '学生', 2: '辅导员' },
       // 修改表单的验证规则对象(主要验证是否为空),这里的key顺序和上面propList一致
@@ -64,6 +64,7 @@ export default {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],
         sex: [{ required: true, message: '不能为空', trigger: 'blur' }],
         identity: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        class: [{ required: true, message: '不能为空', trigger: 'blur' }],
         college: [{ required: true, message: '不能为空', trigger: 'blur' }],
         tel: [{ required: true, message: '不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '不能为空', trigger: 'blur' }]
@@ -78,7 +79,7 @@ export default {
     // 获取个人信息并展示
     async showProfile () {
       // 学生和辅导员获取数据的url不同
-      const { data: res } = await this.$http.get('/profile/coun/' + this.id)
+      const { data: res } = await this.$http.get('/profile/stu/' + this.id)
       if (res[1].status !== '200') return this.$message.error('获取个人资料失败！')
       res[0].identity = this.identity_reflect[res[0].identity]
       this.personInfo = res[0]
@@ -88,8 +89,9 @@ export default {
       this.$refs.modifyFormRef[0].validate(async valid => {
         if (!valid) return
         // 发起修改用户信息的数据请求
-        const { data: res } = await this.$http.put('/profile/coun/' + this.id, {
+        const { data: res } = await this.$http.put('/profile/stu/' + this.id, {
           sex: this.personInfo.sex,
+          class: this.personInfo.class,
           college: this.personInfo.college,
           tel: this.personInfo.tel,
           password: this.personInfo.password

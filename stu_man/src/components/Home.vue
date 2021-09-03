@@ -38,6 +38,7 @@
 export default {
   data () {
     return {
+      // 左侧菜单渲染数据列表
       menulist: [
         [
           { id: 1, authName: '用户管理', children: [{ id: 11, authName: '账号管理', path: '/accounts' }] }
@@ -45,13 +46,13 @@ export default {
         [
           { id: 2, authName: '公告管理', children: [{ id: 21, authName: '查看', path: '/notice' }] },
           { id: 3, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/stuProfile' }] },
-          { id: 4, authName: '请假管理', children: [{ id: 42, authName: '写假条', path: '/leaveForm' }] },
+          { id: 4, authName: '假条管理', children: [{ id: 42, authName: '写假条', path: '/leaveForm' }] },
           { id: 5, authName: '健康上报', children: [{ id: 51, authName: '体温表', path: '/temForm' }] }
         ],
         [
           { id: 2, authName: '公告管理', children: [{ id: 21, authName: '查看', path: '/notice' }, { id: 22, authName: '发布', path: '/release' }] },
           { id: 3, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/counProfile' }] },
-          { id: 4, authName: '请假管理', children: [{ id: 41, authName: '审核', path: '/leaveForm' }] },
+          { id: 4, authName: '假条管理', children: [{ id: 41, authName: '待审批', path: '/pendingLeaveForm' }, { id: 42, authName: '审批通过', path: '/passedLeaveForm' }, { id: 43, authName: '审批未通过', path: '/failedLeaveForm' }] },
           { id: 5, authName: '体温表管理', children: [{ id: 21, authName: '查看', path: '/temForm' }] }
         ]
       ],

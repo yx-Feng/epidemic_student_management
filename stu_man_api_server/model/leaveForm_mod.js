@@ -70,4 +70,32 @@ module.exports = class profile_mod extends require('./model') {
       })
     }))
   }
+
+  // 根据辅导员id和假条的state获取假条
+  static getPendingLF(id, state) {
+    return new Promise((resolve, reject) => {
+      const sql = "select leaveform.*,student.name,student.tel" +
+          " from leaveform,student where counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+      console.log(sql)
+      this.query(sql).then(result => {
+        resolve(result)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
+
+  // 更新假条的state
+  static updateLFState(s_id, createTime, state) {
+    return new Promise((resolve, reject) => {
+      const sql = "update leaveform " +
+          "set state='" + state + "' where s_id='" + s_id + "' and createdTime='" + createTime + "'"
+      console.log(sql)
+      this.query(sql).then(result => {
+        resolve(result)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
 }

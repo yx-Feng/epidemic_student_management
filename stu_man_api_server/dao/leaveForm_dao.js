@@ -75,4 +75,48 @@ module.exports = class profile_dao extends require('../model/leaveForm_mod') {
       res.send([{'status': '403'}])
     })
   }
+
+  // 根据辅导员id和假条的state获取假条
+  static async getPendingLeaveForm(req,res) {
+    let id = req.params.id
+    let state = req.params.state
+    let pageNum = Number(req.query.pagenum)
+    let pageSize = Number(req.query.pagesize)
+    await this.getPendingLF(id, state).then((result) => {
+      // total记录获取到的假条总数
+      let total = result.length
+      let start = pageSize * (pageNum - 1)
+      let end = Math.min(start + pageSize, total)
+      result = result.slice(start, end)
+      // 时间戳的格式转换
+      for (let i=0;i<result.length; i++) {
+        result[i]['start_time'] = sd.format(result[i]['start_time'], 'YYYY-MM-DD')
+        result[i]['end_time'] = sd.format(result[i]['end_time'], 'YYYY-MM-DD')
+        result[i]['createdTime'] = sd.format(result[i]['createdTime'], 'YYYY-MM-DD HH:mm:ss')
+      }
+      result[result.length] = {'status': '200', 'length': total}
+      res.send(result)
+    }).catch(err =>{
+      console.log(err)
+      res.send([{'status': '403'}])
+    })
+  }
+
+  // 更新假条的state
+  static async updateLeaveFormState(req,res) {
+    let id = req.params.s_id
+    let isOK = req.params.isOK
+    let createTime = req.params.createdTime
+    let state
+    if (isOK === 'true') {
+      state = '2'
+    } else {
+      state = '1'
+    }
+    await this.updateLFState(id, createTime, state).then((result) => {
+      res.send([{'status': '200'}])
+    }).catch(err =>{
+      res.send([{'status': '403'}])
+    })
+  }
 }
