@@ -31,14 +31,21 @@ module.exports = class profile_mod extends require('./model') {
       let sql = "select id" + " from counselor where name='" + counselor_name + "'"
       console.log(sql)
       this.query(sql).then(result_1 => {
-        sql = "insert into" +
-            " leaveform(s_id,start_time,end_time,reason,place,state,counselor_id,createdTime) " +
-            "values('" + id + "','" + start_time + "','" + end_time + "','" + reason + "','" + place + "','" +  state + "','" + result_1[0]['id'] + "','" + createdTime + "')"
-        console.log(sql)
-        this.query(sql).then(result => {
-          resolve(result)
+        sql = "select count(*) as num" + " from leaveform"
+        this.query(sql).then(result_2 => {
+          console.log(sql)
+          // 假条序号加1
+          result_2[0]['num'] += 1
+          sql = "insert into" +
+              " leaveform(s_id,start_time,end_time,reason,place,state,counselor_id,createdTime,sn) " +
+              "values('" + id + "','" + start_time + "','" + end_time + "','" + reason + "','" + place + "','" +  state + "','" + result_1[0]['id'] + "','" + createdTime + "'," + result_2[0]['num'] + ")"
+          console.log(sql)
+          this.query(sql).then(result => {
+            resolve(result)
+          })
         })
       }).catch(err => {
+        console.log(err)
         reject(err)
       })
     })

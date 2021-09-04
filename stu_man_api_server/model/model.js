@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 
 // 封装一个数据库模型基类
 module.exports = class Model {
-  static query(sql, params){
+  static query(sql){
     return new Promise((resolve, reject) => {
       pool.getConnection(function (err, connection) {
         if (err) {
@@ -20,7 +20,7 @@ module.exports = class Model {
         } else {
           connection.multipleStatements = true   // 让mysql能执行多条sql语句
           // query执行sql语句
-          connection.query(sql, params, (err,results)=>{
+          connection.query(sql, (err,results)=>{
             if (err){
               reject(err)
               // connection.release()

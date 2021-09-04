@@ -47,10 +47,10 @@
     <el-dialog title="新建假条" :visible.sync="addDialogVisible" width="35%" @close="addDialogClosed">
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
         <el-form-item label="开始时间" prop="start_time">
-          <el-input v-model="addForm.start_time"></el-input>
+          <el-input placeholder="格式：YYYY-MM-DD" v-model="addForm.start_time"></el-input>
         </el-form-item>
         <el-form-item label="结束时间" prop="end_time">
-          <el-input v-model="addForm.end_time"></el-input>
+          <el-input placeholder="格式：YYYY-MM-DD" v-model="addForm.end_time"></el-input>
         </el-form-item>
         <el-form-item label="去向" prop="place">
           <el-input v-model="addForm.place"></el-input>
@@ -71,10 +71,10 @@
     <el-dialog title="修改假条" :visible.sync="editDialogVisible" width="35%" @close="editDialogClosed">
       <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
         <el-form-item label="开始时间" prop="start_time">
-          <el-input v-model="editForm.start_time"></el-input>
+          <el-input placeholder="格式：YYYY-MM-DD" v-model="editForm.start_time"></el-input>
         </el-form-item>
         <el-form-item label="结束时间" prop="end_time">
-          <el-input v-model="editForm.end_time"></el-input>
+          <el-input placeholder="格式：YYYY-MM-DD" v-model="editForm.end_time"></el-input>
         </el-form-item>
         <el-form-item label="去向" prop="place">
           <el-input v-model="editForm.place"></el-input>
