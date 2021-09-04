@@ -77,12 +77,13 @@ module.exports = class profile_dao extends require('../model/leaveForm_mod') {
   }
 
   // 根据辅导员id和假条的state获取假条
-  static async getPendingLeaveForm(req,res) {
+  static async getDiffLeaveForm(req,res) {
     let id = req.params.id
     let state = req.params.state
+    let index = req.query.query
     let pageNum = Number(req.query.pagenum)
     let pageSize = Number(req.query.pagesize)
-    await this.getPendingLF(id, state).then((result) => {
+    await this.getDiffLF(id, state, index).then((result) => {
       // total记录获取到的假条总数
       let total = result.length
       let start = pageSize * (pageNum - 1)

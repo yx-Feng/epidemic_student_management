@@ -12,7 +12,7 @@
       <el-row :gutter="20">
         <!-- 查询假条的搜索框 -->
         <el-col :span="10">
-          <el-input placeholder="请根据学生的学号搜索" clearable @clear="getLeaveFormList">
+          <el-input placeholder="请根据学生的学号搜索" v-model="queryInfo.query" clearable @clear="getLeaveFormList">
             <el-button slot="append" icon="el-icon-search" @click="getLeaveFormList"></el-button>
           </el-input>
         </el-col>
@@ -52,6 +52,8 @@ export default {
     return {
       // 获取假条列表的参数对象(查询的依据)
       queryInfo: {
+        // 搜索框输入的内容
+        query: '',
         // 每页的数据条数(默认每页显示3条)
         pagesize: 3,
         // 页号(默认是第一页)

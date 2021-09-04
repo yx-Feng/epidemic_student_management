@@ -42,7 +42,7 @@ router.delete('/:id/:createdTime', function (req, res, next) {
 // 根据辅导员id和假条的state获取假条
 router.get('/coun/:id/:state', function (req, res, next) {
   try {
-    leaveForm.getPendingLeaveForm(req,res)
+    leaveForm.getDiffLeaveForm(req,res)
   } catch (err) {
     next(err)
   }

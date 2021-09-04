@@ -72,10 +72,17 @@ module.exports = class profile_mod extends require('./model') {
   }
 
   // 根据辅导员id和假条的state获取假条
-  static getPendingLF(id, state) {
+  static getDiffLF(id, state, index) {
     return new Promise((resolve, reject) => {
-      const sql = "select leaveform.*,student.name,student.tel" +
-          " from leaveform,student where counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+      // 如果url中有Params，根据index模糊查询, 否则默认全部查询
+      let sql
+      if (index) {
+        sql = sql = "select leaveform.*,student.name,student.tel" +
+            " from leaveform,student where leaveform.s_id like '%" + index + "%' and leaveform.counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+      } else {
+        sql = "select leaveform.*,student.name,student.tel" +
+            " from leaveform,student where counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+      }
       console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
