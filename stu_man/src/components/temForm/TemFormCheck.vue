@@ -16,8 +16,9 @@
           </el-input>
         </el-col>
         <!-- 筛选框 -->
-        <el-select v-model="value" placeholder="选择"  @change="isFever()">
+        <el-select v-model="value" placeholder="选择"  @change="valueChange()">
           <el-option value="发热"></el-option>
+          <el-option value="全部"></el-option>
         </el-select>
       </el-row>
       <!-- 用户列表区域 -->
@@ -57,6 +58,7 @@ export default {
       temList: [],
       // 能获得的体温表总数
       total: 0,
+      // 动态绑定select框中的value
       value: ''
     }
   },
@@ -89,9 +91,15 @@ export default {
       this.getTemFormList()
     },
     // 检测select的选择
-    isFever () {
-      this.queryInfo.select = '发热'
-      this.getTemFormList()
+    valueChange () {
+      if (this.value === '发热') {
+        this.queryInfo.select = '发热'
+        this.getTemFormList()
+      }
+      if (this.value === '全部') {
+        this.queryInfo.select = ''
+        this.getTemFormList()
+      }
     }
   }
 }
