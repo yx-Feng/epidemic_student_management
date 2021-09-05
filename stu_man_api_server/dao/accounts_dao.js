@@ -1,16 +1,27 @@
+const jwt = require('../util/jwt')
+const { jwtSecret } = require('../config/config.default')
 
 module.exports = class accounts_dao extends require('../model/accounts_mod'){
 
-  // 用户登录反馈的信息处理
+  // 用户登录的信息处理
   static async login(req,res){
     let body = req.body
-    let loginData = await this.loginUser(body.username,body.password,body.type)
-    // 用户的登录数据能够在数据库中查到，返回查询到的全部数据，并添加状态码200，否则返回状态码401
-    if (loginData[0]){
-      loginData[0]['status'] = 200
-      res.send(loginData)
+    let data = await this.loginUser(body.id,body.password,body.identity)
+    data = JSON.parse(JSON.stringify(data[0]))
+    if (data){
+      // 生成token
+      data['token'] = await jwt.sign({
+        userId: data['id']
+      }, jwtSecret, {
+        expiresIn: 60 * 60 * 24
+      })
+      const meta = { 'status': '200' }
+      res.status(200).json({
+        data,
+        meta
+      })
     } else {
-      res.send([{'status': '401'}])
+      res.status(401).end()
     }
   }
 

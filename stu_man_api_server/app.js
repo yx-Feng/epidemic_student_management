@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const accountsRouter = require('./routes/accounts')
 const profileRouter = require('./routes/profile')
 const leaveFormRouter = require('./routes/leaveForm')
@@ -6,23 +7,11 @@ const temFormRouter = require('./routes/temForm')
 
 const app = express()
 
-// 全系统允许跨域处理，放在所有API前面
-app.all("*", function (req, res, next) {
-  // 设置允许跨域的域名，*代表允许任意域名跨域
-  res.header("Access-Control-Allow-Origin", "*")
-  // 允许的header类型
-  res.header("Access-Control-Allow-Headers", "*")
-  // 跨域允许的请求方式
-  res.header("Access-Control-Allow-Methods", "*")
-  if (req.method.toLowerCase() === 'options')
-    res.sendStatus(200)
-  else
-    next()
-})
+// 解决跨域问题
+app.use(cors())
 
-// 解析表单请求体: application/json
+// 分别解析表单请求体: application/json 和 application/x-www-form-urlencoded
 app.use(express.json())
-// 解析表单请求体: application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
 
 // 挂载路由

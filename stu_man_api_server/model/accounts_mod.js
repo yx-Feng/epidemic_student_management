@@ -2,16 +2,17 @@
 module.exports = class accounts_mod extends require('./model'){
 
   // 用户登录
-  static loginUser(username,password,identity){
-    return new Promise(((resolve, reject) => {
-      let sql = "select * from"+" user where binary id='"+username+"' and password='"+password+"' and identity='"+identity+"'"
-      console.log(sql)
+  static loginUser(id,password,identity){
+    return new Promise((resolve, reject) => {
+      let sql = "select * " +
+                "from user " +
+                "where binary id='"+id+"' and password='"+password+"' and identity='"+identity+"'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
-        reject('查询失败')
+        reject(err)
       })
-    }))
+    })
   }
 
   // 获取用户列表数据

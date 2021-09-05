@@ -1,9 +1,10 @@
 const express = require('express')
 const userList = require('../dao/accounts_dao')
+const auth = require('../middleware/auth')
 
 const router = express.Router()
 
-// 响应登录请求
+// 用户登录请求
 router.post('/login', function (req, res, next) {
   try {
     userList.login(req,res)
@@ -13,7 +14,7 @@ router.post('/login', function (req, res, next) {
 })
 
 // 获取账号列表
-router.get('/accounts', function (req, res, next) {
+router.get('/accounts', auth, function (req, res, next) {
   try {
     userList.getAccounts(req,res)
   } catch (err) {
