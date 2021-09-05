@@ -30,6 +30,15 @@ router.get('/:id/:createdTime', function (req, res, next) {
   }
 })
 
+// 根据id更新假条信息
+router.put('/:id/:createdTime', function (req, res, next) {
+  try {
+    leaveForm.updateLeaveForm(req,res)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // 删除某张假条
 router.delete('/:id/:createdTime', function (req, res, next) {
   try {

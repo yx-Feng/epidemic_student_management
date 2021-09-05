@@ -1,6 +1,6 @@
 const sd = require('silly-datetime')
 
-module.exports = class profile_dao extends require('../model/leaveForm_mod') {
+module.exports = class leaveForm_dao extends require('../model/leaveForm_mod') {
 
   // 根据id获取假条列表
   static async getLeaveFormList(req,res) {
@@ -57,10 +57,19 @@ module.exports = class profile_dao extends require('../model/leaveForm_mod') {
       result[0]['end_time'] = sd.format(result[0]['end_time'], 'YYYY-MM-DD')
       result[0]['createdTime'] = sd.format(result[0]['createdTime'], 'YYYY-MM-DD HH:mm:ss')
       result[result.length] = {'status': '200'}
-      console.log(result)
       res.send(result)
     }).catch(err => {
       res.send([{'status': '404'}])
+    })
+  }
+
+  // 更新假条
+  static async updateLeaveForm(req,res) {
+    let body = req.body
+    await this.updateLeaveFormById(req.params.id,body.start_time,body.end_time,body.place,body.reason,req.params.createdTime).then(result => {
+      res.send([{'status': '201'}])
+    }).catch(err => {
+      res.send([{'status': '403'}])
     })
   }
 

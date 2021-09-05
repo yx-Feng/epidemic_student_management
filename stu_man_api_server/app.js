@@ -2,6 +2,7 @@ const express = require('express')
 const accountsRouter = require('./routes/accounts')
 const profileRouter = require('./routes/profile')
 const leaveFormRouter = require('./routes/leaveForm')
+const temFormRouter = require('./routes/temForm')
 
 const app = express()
 
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(accountsRouter)
 app.use('/profile', profileRouter)
 app.use('/leaveforms', leaveFormRouter)
+app.use('/temforms', temFormRouter)
 
 // // 通常在所有的路由之后配置处理404内容
 // app.use((req,res,next) => {

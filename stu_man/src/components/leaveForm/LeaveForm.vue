@@ -83,7 +83,7 @@
           <el-input v-model="editForm.reason"></el-input>
         </el-form-item>
         <el-form-item label="审核人" prop="counselor_name">
-          <el-input v-model="editForm.counselor_name"></el-input>
+          <el-input v-model="editForm.counselor_name" disabled></el-input>
         </el-form-item>
         <el-form-item label="创建时间" prop="createdTime">
           <el-input v-model="editForm.createdTime" disabled></el-input>
@@ -91,7 +91,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="editLeaveForm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -218,6 +218,24 @@ export default {
     // 监听编辑假条对话框的关闭事件
     editDialogClosed () {
       this.$refs.editFormRef.resetFields()
+    },
+    // 修改假条信息并提交
+    editLeaveForm () {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put('leaveforms/' + this.id + '/' + this.editForm.createdTime, {
+          start_time: this.editForm.start_time,
+          end_time: this.editForm.end_time,
+          reason: this.editForm.reason,
+          place: this.editForm.place
+        })
+        if (res[0].status !== '201') {
+          return this.$message.error('更新假条失败！')
+        }
+        this.$message.success('更新体假条成功！')
+        this.editDialogVisible = false
+        await this.getLeaveFormList()
+      })
     },
     // 根据用户Id和假条的createdTime删除假条
     async removeLeaveForm (createdTime) {

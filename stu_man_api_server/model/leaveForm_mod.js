@@ -1,5 +1,5 @@
 
-module.exports = class profile_mod extends require('./model') {
+module.exports = class leaveForm_mod extends require('./model') {
 
   // 根据id获取假条列表
   static getLeaveFormListById(id, index) {
@@ -56,6 +56,19 @@ module.exports = class profile_mod extends require('./model') {
     return new Promise((resolve, reject) => {
       const sql = "select leaveform.*,counselor.name as 'counselor_name' " +
           "from leaveform,counselor where leaveform.s_id='" + s_id + "' and leaveform.createdTime='" + createdTime + "' and leaveform.counselor_id=counselor.id"
+      console.log(sql)
+      this.query(sql).then(result => {
+        resolve(result)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
+
+  // 更新假条信息
+  static updateLeaveFormById(id,start_time,end_time,place,reason,createdTime) {
+    return new Promise((resolve, reject) => {
+      let sql = "update leaveform" + " set start_time='"+ start_time + "',end_time='" + end_time + "',place='" + place + "',reason='" + reason + "' where s_id='" + id + "' and createdTime='" + createdTime + "'"
       console.log(sql)
       this.query(sql).then(result => {
         resolve(result)

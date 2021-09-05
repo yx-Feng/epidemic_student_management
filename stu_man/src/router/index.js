@@ -12,6 +12,7 @@ import Account from '../components/accounts/Account.vue'
 import PendingLeaveForm from '../components/leaveForm/PendingLeaveForm'
 import FailedLeaveForm from '../components/leaveForm/FailedLeaveForm'
 import PassedLeaveForm from '../components/leaveForm/PassedLeaveForm'
+import TemFormCheck from '../components/temForm/TemFormCheck'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,7 @@ const router = new VueRouter({
         { path: '/welcome', component: Welcome },
         { path: '/notice', component: Notice },
         { path: '/temForm', component: TemForm },
+        { path: '/temFormCheck', component: TemFormCheck },
         { path: '/leaveForm', component: LeaveForm },
         { path: '/pendingLeaveForm', component: PendingLeaveForm },
         { path: '/failedLeaveForm', component: FailedLeaveForm },

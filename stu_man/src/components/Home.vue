@@ -53,7 +53,7 @@ export default {
           { id: 2, authName: '公告管理', children: [{ id: 21, authName: '查看', path: '/notice' }, { id: 22, authName: '发布', path: '/release' }] },
           { id: 3, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/counProfile' }] },
           { id: 4, authName: '假条管理', children: [{ id: 41, authName: '待审批', path: '/pendingLeaveForm' }, { id: 42, authName: '审批通过', path: '/passedLeaveForm' }, { id: 43, authName: '审批未通过', path: '/failedLeaveForm' }] },
-          { id: 5, authName: '体温表管理', children: [{ id: 21, authName: '查看', path: '/temForm' }] }
+          { id: 5, authName: '体温表管理', children: [{ id: 21, authName: '查看', path: '/temFormCheck' }] }
         ]
       ],
       iconsObj: {

@@ -23,8 +23,8 @@
         <el-table-column label="假条创建时间" prop="createdTime"></el-table-column>
         <el-table-column label="是否允许" width="100px">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.state_ok" active-text="OK" @change="stateChange(scope.row)"></el-switch>
-            <el-switch v-model="scope.row.state_no" active-text="NO" @change="stateChange(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.state_ok" active-text="OK" @change="stateChangeOk(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.state_no" active-text="NO" @change="stateChangeNo(scope.row)"></el-switch>
           </template>
         </el-table-column>
       </el-table>
@@ -86,10 +86,27 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getLeaveFormList()
     },
+    // 监听 ok的 switch 开关状态的改变
+    async stateChangeOk (leaveFormInfo) {
+      if (leaveFormInfo.state_ok === true && leaveFormInfo.state_no && leaveFormInfo.state_no === true) {
+        leaveFormInfo.state_no = false
+      }
+      // 当两个switch开关都关闭，不去更新假条列表
+      if (leaveFormInfo.state_ok && leaveFormInfo.state_no && leaveFormInfo.state_ok === false && leaveFormInfo.state_no === false) return
+      const { data: res } = await this.$http.put(
+        `leaveforms/${leaveFormInfo.s_id}/${leaveFormInfo.createdTime}/state/${leaveFormInfo.state_ok}`
+      )
+      if (res[res.length - 1].status !== '200') {
+        // 没更新，switch还是保持原来的状态
+        leaveFormInfo.state_ok = !leaveFormInfo.state_ok
+      }
+    },
     // 监听 switch 开关状态的改变
-    async stateChange (leaveFormInfo) {
-      // 当两个switch开关都打开或都关闭，不去更新假条
-      if (leaveFormInfo.state_ok && leaveFormInfo.state_no && leaveFormInfo.state_ok === true && leaveFormInfo.state_no === true) return
+    async stateChangeNo (leaveFormInfo) {
+      if (leaveFormInfo.state_no === true && leaveFormInfo.state_ok && leaveFormInfo.state_ok === true) {
+        leaveFormInfo.state_ok = false
+      }
+      // 当两个switch开关都关闭，不去更新假条列表
       if (leaveFormInfo.state_ok && leaveFormInfo.state_no && leaveFormInfo.state_ok === false && leaveFormInfo.state_no === false) return
       const { data: res } = await this.$http.put(
         `leaveforms/${leaveFormInfo.s_id}/${leaveFormInfo.createdTime}/state/${leaveFormInfo.state_ok}`
