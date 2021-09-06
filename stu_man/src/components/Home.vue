@@ -44,32 +44,27 @@ export default {
           { id: 1, authName: '用户管理', children: [{ id: 11, authName: '账号管理', path: '/accounts' }] }
         ],
         [
-          { id: 2, authName: '公告管理', children: [{ id: 21, authName: '查看', path: '/notice' }] },
-          { id: 3, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/stuProfile' }] },
-          { id: 4, authName: '假条管理', children: [{ id: 42, authName: '写假条', path: '/leaveForm' }] },
-          { id: 5, authName: '健康上报', children: [{ id: 51, authName: '体温表', path: '/temForm' }] }
+          { id: 2, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/stuProfile' }] },
+          { id: 3, authName: '假条管理', children: [{ id: 32, authName: '写假条', path: '/leaveForm' }] },
+          { id: 4, authName: '健康上报', children: [{ id: 32, authName: '体温表', path: '/temForm' }] }
         ],
         [
-          { id: 2, authName: '公告管理', children: [{ id: 21, authName: '查看', path: '/notice' }, { id: 22, authName: '发布', path: '/release' }] },
-          { id: 3, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/counProfile' }] },
-          { id: 4, authName: '假条管理', children: [{ id: 41, authName: '待审批', path: '/pendingLeaveForm' }, { id: 42, authName: '审批通过', path: '/passedLeaveForm' }, { id: 43, authName: '审批未通过', path: '/failedLeaveForm' }] },
-          { id: 5, authName: '体温表管理', children: [{ id: 21, authName: '查看', path: '/temFormCheck' }] }
+          { id: 2, authName: '个人信息', children: [{ id: 21, authName: '查看', path: '/counProfile' }] },
+          { id: 3, authName: '假条管理', children: [{ id: 31, authName: '待审批', path: '/pendingLeaveForm' }, { id: 33, authName: '审批通过', path: '/passedLeaveForm' }, { id: 34, authName: '审批未通过', path: '/failedLeaveForm' }] },
+          { id: 4, authName: '体温表管理', children: [{ id: 21, authName: '查看', path: '/temFormCheck' }] }
         ]
       ],
       iconsObj: {
         1: 'el-icon-user-solid',
         11: 'el-icon-menu',
-        2: 'el-icon-s-claim',
+        2: 'el-icon-user-solid',
         21: 'el-icon-view',
-        22: 'el-icon-position',
-        3: 'el-icon-user-solid',
-        31: 'el-icon-edit',
-        4: 'el-icon-tickets',
-        41: 'el-icon-s-check',
-        42: 'el-icon-document-checked',
-        43: 'el-icon-document-delete',
-        5: 'el-icon-first-aid-kit',
-        51: 'el-icon-document-add'
+        3: 'el-icon-tickets',
+        31: 'el-icon-s-check',
+        32: 'el-icon-document-add',
+        33: 'el-icon-document-checked',
+        34: 'el-icon-document-delete',
+        4: 'el-icon-first-aid-kit'
       },
       // 是否折叠
       isCollapse: false,
@@ -84,6 +79,7 @@ export default {
     this.identity = window.sessionStorage.getItem('identity')
   },
   methods: {
+    // 退出
     logout () {
       window.sessionStorage.clear()
       this.$router.push('/login')

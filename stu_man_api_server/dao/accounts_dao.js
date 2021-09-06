@@ -3,92 +3,85 @@ const { jwtSecret } = require('../config/config.default')
 
 module.exports = class accounts_dao extends require('../model/accounts_mod'){
 
-  // 用户登录的信息处理
+  // 用户登录
   static async login(req,res){
     let body = req.body
     let data = await this.loginUser(body.id,body.password,body.identity)
-    data = JSON.parse(JSON.stringify(data[0]))
-    if (data){
+    if (data.length > 0){
+      data = JSON.parse(JSON.stringify(data[0]))
       // 生成token
       data['token'] = await jwt.sign({
         userId: data['id']
       }, jwtSecret, {
         expiresIn: 60 * 60 * 24
       })
-      const meta = { 'status': '200' }
-      res.status(200).json({
-        data,
-        meta
-      })
+      res.status(200).json({data})
     } else {
       res.status(401).end()
     }
   }
 
-  // 用户账号列表数据处理
-  static async getAccounts(req,res){
-    // 获取请求url中的Params,也就是我们查询的依据
-    let index = req.query.query
+  // 获取账号列表(根据页号、页码和搜索关键字)
+  static async getAccountList(req,res){
+    let query = req.query.query     //查询依据
     let pageNum = Number(req.query.pagenum)
     let pageSize = Number(req.query.pagesize)
-    let accountList = await this.getAccountList(index)
-    // total记录获取到的数据总数
+    let accountList = await this.getAccounts(query)
+    // total记录数据库中的账号总数
     let total = accountList.length
 
-    // 如果能够获取账号列表，返回并添加状态码200，否则返回状态码404
+    // 如果能够获取账号列表，返回状态码200并返回获取到的数据，否则返回状态码404
     if (total > 0){
       let start = pageSize * (pageNum - 1)
       let end = Math.min(start + pageSize, total)
-      let newList = accountList.slice(start, end)
-      newList[newList.length] = {'length': total, 'status': '200'}
-      res.send(newList)
+      let data = accountList.slice(start, end)
+      data[data.length] = {'length': total}
+      res.status(200).json({data})
     } else {
-      res.send([{'status': '404'}])
+      res.status(404).end()
     }
   }
 
-  // 添加用户
+  // 添加一个账号
   static async addAccount(req,res) {
     let body = req.body
     await this.createAccount(body.id,body.password,body.identity).then(() => {
-      res.send([{'status': '201'}])
-    }).catch(err =>{
-      res.send([{'status': '403'}])
+      res.status(201).end()
+    }).catch(err => {
+      res.status(403).end()
     })
   }
 
-  // 获取单个账号
+  // 获取单个账号信息
   static async getAccount(req,res) {
     let id = req.params.id
-    await this.getAccountById(id).then((result) => {
+    await this.getAccountById(id).then(result => {
       if (result.length > 0){
-        result[result.length] = {'status': '200'}
-        res.send(result)
-      } else {
-        res.send([{'status': '404'}])
+        const data = JSON.parse(JSON.stringify(result[0]))
+        res.status(200).json({data})
       }
-    }).catch(err =>{
-      res.send([{'status': '404'}])
+    }).catch(err => {
+      res.status(404).end()
     })
   }
 
-  // 更新账号
+  // 根据id更新账号信息
   static async updateAccount(req,res) {
     let body = req.body
-    await this.updateAccountById(req.params.id,body.password,body.identity).then((result) => {
-      res.send([{'status': '201'}])
+    await this.updateAccountById(req.params.id,body.password,body.identity).then(result => {
+      res.status(201).end()
     }).catch(err =>{
-      res.send([{'status': '403'}])
+      res.status(403).end()
     })
   }
 
-  // 删除单个账号
+  // 根据id删除指定账号
   static async deleteAccount(req,res) {
-    await this.deleteAccountById(req.params.id).then((result) => {
-      res.send([{'status': '204'}])
-    }).catch(err =>{
-      console.log(err)
-      res.send([{'status': '403'}])
+    let id = req.params.id
+    await this.deleteAccountById(id).then(result => {
+      res.status(204).end()
+    }).catch(err => {
+      res.status(403).end()
     })
   }
 }

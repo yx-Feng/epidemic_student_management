@@ -15,82 +15,87 @@ module.exports = class accounts_mod extends require('./model'){
     })
   }
 
-  // 获取用户列表数据
-  static getAccountList(index){
-    return new Promise(((resolve, reject) => {
-      // 如果url中有Params，根据index模糊查询, 否则默认全部查询
+  // 获取账号列表(根据页号、页码和搜索关键字)
+  static getAccounts(query){
+    return new Promise((resolve, reject) => {
       let sql
-      if (index) {
-        sql = "select * from"+" user where id like '%"+index+"%'"
+      if (query) {
+        sql = "select * " +
+            "from user " +
+            "where id like '%"+query+"%'"
       } else {
-        sql = "select * from" + " user"
+        sql = "select * " +
+            "from user"
       }
-      console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
-        reject('账号列表获取失败')
+        reject(err)
       })
-    }))
+    })
   }
 
   // 添加一个账号
   static createAccount(id,password,identity){
-    return new Promise(((resolve, reject) => {
-      let sql = "insert into" + " user(id,password,identity) values('" + id + "','" + password + "','" + identity+ "')"
-      console.log(sql)
+    return new Promise((resolve, reject) => {
+      let sql = "insert into" +
+          " user(id,password,identity) " +
+          "values('" + id + "','" + password + "','" + identity+ "')"
       this.query(sql).then(result => {
         resolve(result)
         // 除了user表，student或counselor表也要初始化
         if (identity === '1'){
-          sql = "insert into" + " student(id,name,sex,class,college,tel) values('" + id +"','空','空','空','空','空')"
+          sql = "insert into" +
+              " student(id,name,sex,class,college,tel) " +
+              "values('" + id +"','空','空','空','空','空')"
         } else {
-          sql = "insert into" + " student(id,name,sex,college,tel) values('" + id +"','空','空','空','空')"
+          sql = "insert into" +
+              " student(id,name,sex,college,tel) " +
+              "values('" + id +"','空','空','空','空')"
         }
-        console.log(sql)
         this.query(sql)
       }).catch(err => {
         reject(err)
       })
-    }))
+    })
   }
 
-  // 获取一个账号
+  // 获取一个账号信息
   static getAccountById(id){
-    return new Promise(((resolve, reject) => {
-      let sql = "select * from user where id='" + id + "'"
-      console.log(sql)
+    return new Promise((resolve, reject) => {
+      let sql = "select * " +
+          "from user where id='" + id + "'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
         reject(err)
       })
-    }))
+    })
   }
 
-  // 更新账号信息
+  // 根据id更新账号信息
   static updateAccountById(id,password,identity){
-    return new Promise(((resolve, reject) => {
-      let sql = "update user" + " set password='"+ password +"',identity='" + identity + "' where id='" + id + "'"
-      console.log(sql)
+    return new Promise((resolve, reject) => {
+      let sql = "update user" +
+          " set password='"+ password +"',identity='" + identity + "' where id='" + id + "'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
         reject(err)
       })
-    }))
+    })
   }
 
-  // 删除单个账号信息
+  // 根据id删除指定账号
   static deleteAccountById(id){
-    return new Promise(((resolve, reject) => {
-      let sql = "delete from" + " user where id='" + id + "'"
-      console.log(sql)
+    return new Promise((resolve, reject) => {
+      let sql = "delete " +
+          "from user where id='" + id + "'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
         reject(err)
       })
-    }))
+    })
   }
 }

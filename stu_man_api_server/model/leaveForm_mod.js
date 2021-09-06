@@ -1,22 +1,20 @@
 
 module.exports = class leaveForm_mod extends require('./model') {
 
-  // 根据id获取假条列表
-  static getLeaveFormListById(id, index) {
+  // 学生根据id获取假条
+  static getLFListById(id, query) {
     return new Promise((resolve, reject) => {
-      // 如果url中有Params，根据index模糊查询, 否则默认全部查询
       let sql
-      if (index) {
+      if (query) {
         // 除了获取假条的信息，还要根据counselor_id获取一下辅导员的名字
         sql = "select leaveform.*,counselor.name as 'counselor_name' " +
             "from leaveform,counselor " +
-            "where leaveform.s_id='" + id + "' and leaveform.start_time like '%"+ index +"%' and leaveform.counselor_id=counselor.id"
+            "where leaveform.s_id='" + id + "' and leaveform.start_time like '%"+ query +"%' and leaveform.counselor_id=counselor.id"
       } else {
         sql = "select leaveform.*,counselor.name as 'counselor_name' " +
             "from leaveform,counselor " +
             "where leaveform.s_id='" + id + "' and leaveform.counselor_id=counselor.id"
       }
-      console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
@@ -26,37 +24,35 @@ module.exports = class leaveForm_mod extends require('./model') {
   }
 
   // 新建假条
-  static createLeaveForm(id,start_time,end_time,reason,place,state,counselor_name,createdTime){
+  static addLF(id,body,createdTime){
     return new Promise((resolve, reject) => {
-      let sql = "select id" + " from counselor where name='" + counselor_name + "'"
-      console.log(sql)
+      let sql = "select id" +
+          " from counselor where name='" + body.counselor_name + "'"
       this.query(sql).then(result_1 => {
-        sql = "select count(*) as num" + " from leaveform"
+        sql = "select max(leaveform.sn) as max_num" +
+            " from leaveform"
         this.query(sql).then(result_2 => {
-          console.log(sql)
-          // 假条序号加1
-          result_2[0]['num'] += 1
+          // 假条序号为当前数据库中序号最大值+1
+          let sn = result_2[0]['max_num'] + 1
           sql = "insert into" +
               " leaveform(s_id,start_time,end_time,reason,place,state,counselor_id,createdTime,sn) " +
-              "values('" + id + "','" + start_time + "','" + end_time + "','" + reason + "','" + place + "','" +  state + "','" + result_1[0]['id'] + "','" + createdTime + "'," + result_2[0]['num'] + ")"
-          console.log(sql)
+              "values('" + id + "','" + body.start_time + "','" + body.end_time + "','" + body.reason + "','" + body.place + "','" +  body.state + "','" + result_1[0]['id'] + "','" + createdTime + "'," + sn + ")"
           this.query(sql).then(result => {
             resolve(result)
           })
         })
       }).catch(err => {
-        console.log(err)
         reject(err)
       })
     })
   }
 
-  // 根据用户id和假条的createdTime获取某张假条信息
-  static getLeaveFormById(s_id, createdTime) {
+  // 根据学生id和假条的createdTime获取假条信息
+  static getLFById(s_id, createdTime) {
     return new Promise((resolve, reject) => {
       const sql = "select leaveform.*,counselor.name as 'counselor_name' " +
-          "from leaveform,counselor where leaveform.s_id='" + s_id + "' and leaveform.createdTime='" + createdTime + "' and leaveform.counselor_id=counselor.id"
-      console.log(sql)
+          "from leaveform,counselor " +
+          "where leaveform.s_id='" + s_id + "' and leaveform.createdTime='" + createdTime + "' and leaveform.counselor_id=counselor.id"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
@@ -65,24 +61,28 @@ module.exports = class leaveForm_mod extends require('./model') {
     })
   }
 
-  // 更新假条信息
-  static updateLeaveFormById(id,start_time,end_time,place,reason,createdTime) {
+  // 根据学生id和假条的createdTime更新假条
+  static updateLFById(id,body,createdTime) {
     return new Promise((resolve, reject) => {
-      let sql = "update leaveform" + " set start_time='"+ start_time + "',end_time='" + end_time + "',place='" + place + "',reason='" + reason + "' where s_id='" + id + "' and createdTime='" + createdTime + "'"
-      console.log(sql)
-      this.query(sql).then(result => {
-        resolve(result)
+      let sql = "update leaveform" +
+          " set start_time='"+ body.start_time + "',end_time='" + body.end_time + "',place='" + body.place + "',reason='" + body.reason + "' where s_id='" + id + "' and createdTime='" + createdTime + "'"
+      this.query(sql).then(result_1 => {
+        sql = "update counselor" +
+            " set name='" + body.counselor_name + "' where id='" + body.counselor_id + "'"
+        this.query(sql).then(result_2 => {
+          resolve(result_2)
+        })
       }).catch(err => {
         reject(err)
       })
     })
   }
 
-  // 根据用户id和假条的createdTime删除假条
-  static deleteLeaveFormById(s_id,createdTime){
+  // 根据学生id和假条的createdTime删除假条
+  static deleteLFById(s_id,createdTime){
     return new Promise(((resolve, reject) => {
-      let sql = "delete from" + " leaveform where s_id='" + s_id + "' and createdTime='" + createdTime + "'"
-      console.log(sql)
+      let sql = "delete from" +
+          " leaveform where s_id='" + s_id + "' and createdTime='" + createdTime + "'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
@@ -94,16 +94,16 @@ module.exports = class leaveForm_mod extends require('./model') {
   // 根据辅导员id和假条的state获取假条
   static getDiffLF(id, state, index) {
     return new Promise((resolve, reject) => {
-      // 如果url中有Params，根据index模糊查询, 否则默认全部查询
       let sql
       if (index) {
         sql = sql = "select leaveform.*,student.name,student.tel" +
-            " from leaveform,student where leaveform.s_id like '%" + index + "%' and leaveform.counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+            " from leaveform,student " +
+            "where leaveform.s_id like '%" + index + "%' and leaveform.counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
       } else {
         sql = "select leaveform.*,student.name,student.tel" +
-            " from leaveform,student where counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
+            " from leaveform,student " +
+            "where counselor_id='" + id + "' and state='" + state + "' and leaveform.s_id=student.id"
       }
-      console.log(sql)
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {
@@ -116,8 +116,8 @@ module.exports = class leaveForm_mod extends require('./model') {
   static updateLFState(s_id, createTime, state) {
     return new Promise((resolve, reject) => {
       const sql = "update leaveform " +
-          "set state='" + state + "' where s_id='" + s_id + "' and createdTime='" + createTime + "'"
-      console.log(sql)
+          "set state='" + state + "' " +
+          "where s_id='" + s_id + "' and createdTime='" + createTime + "'"
       this.query(sql).then(result => {
         resolve(result)
       }).catch(err => {

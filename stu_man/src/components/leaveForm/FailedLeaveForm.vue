@@ -77,16 +77,16 @@ export default {
   methods: {
     // 根据辅导员id获取待审批假条列表
     async getLeaveFormList () {
-      const { data: res } = await this.$http.get('/leaveforms/coun/' + this.id + '/1', {
-        params: this.queryInfo
-      })
-      if (res[res.length - 1].status === '404') {
-        return this.$message.success('获取到0张假条！')
+      try {
+        const { data: res } = await this.$http.get('/leaveforms/coun/' + this.id + '/1', {
+          params: this.queryInfo
+        })
+        this.total = res.data[res.data.length - 1].length
+        res.data.pop()
+        this.leaveList = res.data
+      } catch (err) {
+        return this.$message.success('获取假条失败！')
       }
-      // 这里的total始终是所有能获取到的假条数量
-      this.total = res[res.length - 1].length
-      res.pop()
-      this.leaveList = res
     },
     // 监听pagesize改变的事件
     handleSizeChange (newSize) {
@@ -100,12 +100,12 @@ export default {
     },
     // 监听 switch 开关状态的改变
     async stateChange (leaveFormInfo) {
-      const { data: res } = await this.$http.put(
-        `leaveforms/${leaveFormInfo.s_id}/${leaveFormInfo.createdTime}/state/${leaveFormInfo.state_ok}`
-      )
-      if (res[res.length - 1].status !== '200') {
-        // 没更新，switch还是保持原来的状态
-        leaveFormInfo.state_ok = !leaveFormInfo.state_ok
+      try {
+        await this.$http.put(
+          `leaveforms/${leaveFormInfo.s_id}/${leaveFormInfo.createdTime}/state/${leaveFormInfo.state_ok}`
+        )
+      } catch (err) {
+        leaveFormInfo.state_ok = !leaveFormInfo.state_ok // 没更新，switch还是保持原来的状态
       }
     },
     // 刷新假条列表

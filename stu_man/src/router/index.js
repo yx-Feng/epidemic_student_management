@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import Login from '../components/accounts/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
-import Notice from '../components/Notice.vue'
 import TemForm from '../components/temForm/TemForm.vue'
 import LeaveForm from '../components/leaveForm/LeaveForm.vue'
 import StuProfile from '../components/profile/StuProfile.vue'
@@ -17,6 +16,7 @@ import TemFormCheck from '../components/temForm/TemFormCheck'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
+  mode: 'history',
   routes: [
     { path: '/', redirect: '/login' },
     { path: '/login', component: Login },
@@ -26,7 +26,6 @@ const router = new VueRouter({
       redirect: '/welcome',
       children: [
         { path: '/welcome', component: Welcome },
-        { path: '/notice', component: Notice },
         { path: '/temForm', component: TemForm },
         { path: '/temFormCheck', component: TemFormCheck },
         { path: '/leaveForm', component: LeaveForm },

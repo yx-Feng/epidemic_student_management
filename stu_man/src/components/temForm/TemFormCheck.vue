@@ -67,18 +67,18 @@ export default {
     this.getTemFormList()
   },
   methods: {
-    // 根据辅导员id和搜索关键词获取体温表列表
+    // 根据辅导员id和查询参数获取体温表列表
     async getTemFormList () {
-      const { data: res } = await this.$http.get('/temforms/coun/' + this.id, {
-        params: this.queryInfo
-      })
-      if (res[res.length - 1].status === '404') {
-        return this.$message.success('获取到0张体温表！')
+      try {
+        const { data: res } = await this.$http.get('/temforms/coun/' + this.id, {
+          params: this.queryInfo
+        })
+        this.total = res.data[res.data.length - 1].length
+        res.data.pop()
+        this.temList = res.data
+      } catch (err) {
+        return this.$message.error('获取体温表失败！')
       }
-      // 这里的total始终是所有能获取到的体温表数量
-      this.total = res[res.length - 1].length
-      res.pop()
-      this.temList = res
     },
     // 监听pagesize改变的事件
     handleSizeChange (newSize) {

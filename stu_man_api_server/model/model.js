@@ -18,12 +18,10 @@ module.exports = class Model {
           console.error(err)
           connection.release()
         } else {
-          connection.multipleStatements = true   // 让mysql能执行多条sql语句
           // query执行sql语句
           connection.query(sql, (err,results)=>{
             if (err){
               reject(err)
-              // connection.release()
             } else {
               resolve(results)
             }

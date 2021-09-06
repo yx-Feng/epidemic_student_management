@@ -29,7 +29,7 @@
                :rules="modifyFormRules" ref="modifyFormRef" label-width="80px">
         <el-form-item :label="item" :prop="propList[i]">
           <!-- 工号和身份不可修改 -->
-          <el-input v-if="item === '工号' || item === '身份' || item === '姓名'" v-model="personInfo[propList[i]]" disabled></el-input>
+          <el-input v-if="item === '工号' || item === '身份'" v-model="personInfo[propList[i]]" disabled></el-input>
           <el-input v-else v-model="personInfo[propList[i]]"></el-input>
         </el-form-item>
       </el-form>
@@ -77,27 +77,32 @@ export default {
   methods: {
     // 获取个人信息并展示
     async showProfile () {
-      // 学生和辅导员获取数据的url不同
-      const { data: res } = await this.$http.get('/profile/coun/' + this.id)
-      if (res[1].status !== '200') return this.$message.error('获取个人资料失败！')
-      res[0].identity = this.identity_reflect[res[0].identity]
-      this.personInfo = res[0]
+      try {
+        const { data: res } = await this.$http.get('/profile/coun/' + this.id)
+        res.data.identity = this.identity_reflect[res.data.identity]
+        this.personInfo = res.data
+      } catch (err) {
+        return this.$message.error('获取个人资料失败！')
+      }
     },
     // 修改个人信息的对话框
     modifyProfile () {
       this.$refs.modifyFormRef[0].validate(async valid => {
         if (!valid) return
-        // 发起修改用户信息的数据请求
-        const { data: res } = await this.$http.put('/profile/coun/' + this.id, {
-          sex: this.personInfo.sex,
-          college: this.personInfo.college,
-          tel: this.personInfo.tel,
-          password: this.personInfo.password
-        })
-        if (res[0].status !== '201') return this.$message.error('更新个人资料失败！')
-        this.$message.success('更新个人资料成功！')
-        this.modifyDialogVisible = false
-        await this.showProfile()
+        try {
+          await this.$http.put('/profile/coun/' + this.id, {
+            name: this.personInfo.name,
+            sex: this.personInfo.sex,
+            college: this.personInfo.college,
+            tel: this.personInfo.tel,
+            password: this.personInfo.password
+          })
+          this.$message.success('更新个人资料成功！')
+          this.modifyDialogVisible = false
+          await this.showProfile()
+        } catch (err) {
+          return this.$message.error('更新个人资料失败！')
+        }
       })
     }
   }

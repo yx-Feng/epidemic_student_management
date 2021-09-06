@@ -16,23 +16,14 @@ router.post('/login', function (req, res, next) {
 // 获取账号列表
 router.get('/accounts', auth, function (req, res, next) {
   try {
-    userList.getAccounts(req,res)
-  } catch (err) {
-    next(err)
-  }
-})
-
-// 获取单个账号信息
-router.get('/accounts/:id', function (req, res, next) {
-  try {
-    userList.getAccount(req,res)
+    userList.getAccountList(req,res)
   } catch (err) {
     next(err)
   }
 })
 
 // 添加一个账号
-router.post('/accounts/', function (req, res, next) {
+router.post('/accounts/', auth, function (req, res, next) {
   try {
     userList.addAccount(req,res)
   } catch (err) {
@@ -40,8 +31,17 @@ router.post('/accounts/', function (req, res, next) {
   }
 })
 
+// 获取单个账号信息
+router.get('/accounts/:id', auth, function (req, res, next) {
+  try {
+    userList.getAccount(req,res)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // 根据id更新账号信息
-router.put('/accounts/:id', function (req, res, next) {
+router.put('/accounts/:id', auth, function (req, res, next) {
   try {
     userList.updateAccount(req,res)
   } catch (err) {
@@ -50,7 +50,7 @@ router.put('/accounts/:id', function (req, res, next) {
 })
 
 // 根据id删除指定账号
-router.delete('/accounts/:id', function (req, res, next) {
+router.delete('/accounts/:id', auth, function (req, res, next) {
   try {
     userList.deleteAccount(req,res)
   } catch (err) {

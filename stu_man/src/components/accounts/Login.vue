@@ -8,8 +8,8 @@
       <!-- 登录表单区域 -->
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
         <!-- 用户名 -->
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid" placeholder="请输入学号或工号"></el-input>
+        <el-form-item prop="id">
+          <el-input v-model="loginForm.id" prefix-icon="el-icon-user-solid" placeholder="请输入学号或工号"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
@@ -17,9 +17,9 @@
         </el-form-item>
         <!-- 单选框：选择学生或辅导员 -->
         <el-form-item>
-          <el-radio label="1" v-model="loginForm.type">学生</el-radio>
-          <el-radio label="2" v-model="loginForm.type">辅导员</el-radio>
-          <el-radio label="0" v-model="loginForm.type">管理员</el-radio>
+          <el-radio label="1" v-model="loginForm.identity">学生</el-radio>
+          <el-radio label="2" v-model="loginForm.identity">辅导员</el-radio>
+          <el-radio label="0" v-model="loginForm.identity">管理员</el-radio>
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -37,15 +37,13 @@ export default {
     return {
       // 这是登录表单的数据绑定对象
       loginForm: {
-        username: 'admin',
-        password: 'admin',
-        type: '0'
+        id: '',
+        password: '',
+        identity: ''
       },
       // 这是表单的验证规则对象
       loginFormRules: {
-        username: [
-          { required: true, message: '请输入登录账号', trigger: 'blur' }
-        ],
+        id: [{ required: true, message: '请输入登录账号', trigger: 'blur' }],
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
           { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
@@ -63,16 +61,18 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         // 发起一次登录请求
-        const { data: res } = await this.$http.post('/login', this.loginForm)
-        if (res[0].status !== 200) return this.$message.error('登录失败！')
-        this.$message.success('登录成功！')
-        window.sessionStorage.setItem('token', res[0].token)
-        // 将用户的identity存到localStorage
-        window.sessionStorage.setItem('identity', res[0].identity)
-        // 将用户的id存到localStorage，后面用来获取个人信息
-        window.sessionStorage.setItem('id', res[0].id)
-        // 跳转到home主页
-        await this.$router.push('/home')
+        try {
+          const { data: res } = await this.$http.post('/login', this.loginForm)
+          this.$message.success('登录成功！')
+          window.sessionStorage.setItem('token', res.data.token)
+          // 将用户的identity和id存到localStorage，后面有用
+          window.sessionStorage.setItem('identity', res.data.identity)
+          window.sessionStorage.setItem('id', res.data.id)
+          // 跳转到home主页
+          await this.$router.push('/home')
+        } catch (err) {
+          return this.$message.error('登录失败！')
+        }
       })
     }
   }

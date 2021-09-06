@@ -20,15 +20,9 @@ app.use('/profile', profileRouter)
 app.use('/leaveforms', leaveFormRouter)
 app.use('/temforms', temFormRouter)
 
-// // 通常在所有的路由之后配置处理404内容
-// app.use((req,res,next) => {
-//   res.status(404).send('404 Not Found.')
-// })
-//
-
 // 在所有中间件之后挂载错误处理中间件
 app.use((err, req, res, next) => {
-  console.log('错误', err)
+  console.log('错误：', err)
 })
 
 // 服务端监听5000端口

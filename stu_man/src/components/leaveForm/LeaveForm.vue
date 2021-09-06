@@ -83,7 +83,7 @@
           <el-input v-model="editForm.reason"></el-input>
         </el-form-item>
         <el-form-item label="审核人" prop="counselor_name">
-          <el-input v-model="editForm.counselor_name" disabled></el-input>
+          <el-input v-model="editForm.counselor_name"></el-input>
         </el-form-item>
         <el-form-item label="创建时间" prop="createdTime">
           <el-input v-model="editForm.createdTime" disabled></el-input>
@@ -165,16 +165,17 @@ export default {
   methods: {
     // 根据个人id获取假条列表
     async getLeaveFormList () {
-      const { data: res } = await this.$http.get('/leaveforms/' + this.id, {
-        params: this.queryInfo
-      })
-      if (res[res.length - 1].status === '404') {
-        return this.$message.success('获取到0张假条！')
+      try {
+        const { data: res } = await this.$http.get('/leaveforms/' + this.id, {
+          params: this.queryInfo
+        })
+        // total始终是数据库中的假条总量
+        this.total = res.data[res.data.length - 1].length
+        res.data.pop()
+        this.leaveList = res.data
+      } catch (err) {
+        return this.$message.error('获取假条失败！')
       }
-      // 这里的total始终是所有能获取到的假条数量
-      this.total = res[res.length - 1].length
-      res.pop()
-      this.leaveList = res
     },
     // 监听pagesize改变的事件
     handleSizeChange (newSize) {
@@ -186,7 +187,7 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getLeaveFormList()
     },
-    // 监听添加用户对话框的关闭事件
+    // 监听添加假条对话框的关闭事件
     addDialogClosed () {
       this.$refs.addFormRef.resetFields()
     },
@@ -194,26 +195,25 @@ export default {
     addLeaveForm () {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return
-        // 可以发起添加用户的网络请求
-        const { data: res } = await this.$http.post('/leaveforms/' + this.id, this.addForm)
-        if (res[0].status === '403') {
+        try {
+          await this.$http.post('/leaveforms/' + this.id, this.addForm)
+          this.$message.success('新建假条成功！')
+          this.addDialogVisible = false // 隐藏对话框
+          await this.getLeaveFormList() // 重新获取假条列表
+        } catch (err) {
           return this.$message.error('新建假条失败！')
         }
-        this.$message.success('新建假条成功！')
-        // 隐藏对话框
-        this.addDialogVisible = false
-        // 重新获取用户列表数据
-        await this.getLeaveFormList()
       })
     },
-    // 展示编辑用户的对话框
+    // 展示编辑假条的对话框
     async showEditDialog (createdTime) {
-      const { data: res } = await this.$http.get('leaveforms/' + this.id + '/' + createdTime)
-      if (res[res.length - 1].status !== '200') {
-        return this.$message.error('查询用户信息失败！')
+      try {
+        const { data: res } = await this.$http.get('leaveforms/' + this.id + '/' + createdTime)
+        this.editForm = res.data
+        this.editDialogVisible = true
+      } catch (err) {
+        return this.$message.error('查询假条信息失败！')
       }
-      this.editForm = res[0]
-      this.editDialogVisible = true
     },
     // 监听编辑假条对话框的关闭事件
     editDialogClosed () {
@@ -223,18 +223,21 @@ export default {
     editLeaveForm () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
-        const { data: res } = await this.$http.put('leaveforms/' + this.id + '/' + this.editForm.createdTime, {
-          start_time: this.editForm.start_time,
-          end_time: this.editForm.end_time,
-          reason: this.editForm.reason,
-          place: this.editForm.place
-        })
-        if (res[0].status !== '201') {
+        try {
+          await this.$http.put('leaveforms/' + this.id + '/' + this.editForm.createdTime, {
+            start_time: this.editForm.start_time,
+            end_time: this.editForm.end_time,
+            reason: this.editForm.reason,
+            place: this.editForm.place,
+            counselor_name: this.editForm.counselor_name,
+            counselor_id: this.editForm.counselor_id
+          })
+          this.$message.success('更新体假条成功！')
+          this.editDialogVisible = false
+          await this.getLeaveFormList()
+        } catch (err) {
           return this.$message.error('更新假条失败！')
         }
-        this.$message.success('更新体假条成功！')
-        this.editDialogVisible = false
-        await this.getLeaveFormList()
       })
     },
     // 根据用户Id和假条的createdTime删除假条
@@ -244,17 +247,17 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).catch(err => err)
-      // 如果用户确认删除，则返回值为字符串confirm
-      // 如果用户取消删除，则返回值为字符串cancel
+      // 如果确认删除，则返回字符串confirm, 如果取消删除，则返回字符串cancel
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消删除')
       }
-      const { data: res } = await this.$http.delete('leaveforms/' + this.id + '/' + createdTime)
-      if (res[res.length - 1].status !== '204') {
+      try {
+        await this.$http.delete('leaveforms/' + this.id + '/' + createdTime)
+        this.$message.success('删除假条成功！')
+        await this.getLeaveFormList()
+      } catch (err) {
         return this.$message.error('删除假条失败！')
       }
-      this.$message.success('删除假条成功！')
-      await this.getLeaveFormList()
     }
   }
 }
