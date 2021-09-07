@@ -1,5 +1,6 @@
 <template>
   <div class="login_container">
+    <h1 style="color: #dddddd;margin: 0;padding: 15px 15px">疫情下的学生管理系统</h1>
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">

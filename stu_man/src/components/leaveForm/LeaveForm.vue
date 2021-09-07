@@ -12,7 +12,7 @@
       <el-row :gutter="20">
         <!-- 查询用户的搜索框 -->
         <el-col :span="8">
-          <el-input placeholder="请根据请假开始时间搜索" v-model="queryInfo.query" clearable @clear="getLeaveFormList">
+          <el-input placeholder="请根据假条创建时间搜索" v-model="queryInfo.query" clearable @clear="getLeaveFormList">
             <el-button slot="append" icon="el-icon-search" @click="getLeaveFormList"></el-button>
           </el-input>
         </el-col>

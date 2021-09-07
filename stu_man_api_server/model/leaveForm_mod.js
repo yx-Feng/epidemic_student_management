@@ -9,7 +9,7 @@ module.exports = class leaveForm_mod extends require('./model') {
         // 除了获取假条的信息，还要根据counselor_id获取一下辅导员的名字
         sql = "select leaveform.*,counselor.name as 'counselor_name' " +
             "from leaveform,counselor " +
-            "where leaveform.s_id='" + id + "' and leaveform.start_time like '%"+ query +"%' and leaveform.counselor_id=counselor.id"
+            "where leaveform.s_id='" + id + "' and leaveform.createdTime like '%"+ query +"%' and leaveform.counselor_id=counselor.id"
       } else {
         sql = "select leaveform.*,counselor.name as 'counselor_name' " +
             "from leaveform,counselor " +
