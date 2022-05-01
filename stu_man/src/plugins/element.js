@@ -1,32 +1,11 @@
 import Vue from 'vue'
 import {
-  Button,
-  Form,
-  FormItem,
-  Input,
-  Message,
-  Radio,
-  Container,
-  Header,
-  Aside,
-  Main,
-  Menu,
-  Submenu,
-  MenuItemGroup,
-  MenuItem,
-  Breadcrumb,
-  BreadcrumbItem,
-  Card,
-  Row,
-  Col,
-  Table,
-  TableColumn,
-  Switch,
-  Pagination,
-  Dialog,
-  MessageBox,
-  Select,
-  Option
+  Button,Form,FormItem,Input,Message,
+  Radio,Container,Header,Aside,Main,
+  Menu,Submenu,MenuItemGroup,MenuItem,
+  Breadcrumb,BreadcrumbItem,Card,Row,Col,
+  Table,TableColumn,Switch,Pagination,
+  Dialog,MessageBox,Select,Option
 } from 'element-ui'
 
 Vue.use(Button)

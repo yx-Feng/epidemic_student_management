@@ -46,7 +46,7 @@ export default {
       loginFormRules: {
         id: [{ required: true, message: '请输入登录账号', trigger: 'blur' }],
         password: [
-          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
         ]
       }
