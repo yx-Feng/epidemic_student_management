@@ -1,4 +1,4 @@
-# **疫情下的学生管理系统(vue3+element-plus+express+mysql)**
+## **疫情下的学生管理系统(vue3+element-plus+express+mysql)**
 
 数据库脚本文件在database文件夹中，数据库设计参考《...设计报告》.docx
 
